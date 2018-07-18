@@ -22,52 +22,38 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef _ARGUMENT_OPTION_H_
-#define _ARGUMENT_OPTION_H_
+#include <iostream>
+#include <kopt/option_parser.h>
 
-#include <string>
-#include <stdexcept>
-#include <functional>
+using namespace Kopt;
 
-#include <unistd.h>
-#include <getopt.h>
-
-#include <kopt/option.h>
-
-namespace Kopt {
-
-class ArgumentOption final: public Option
+int main(int argc, char *argv[])
 {
-public:
-    ArgumentOption(const std::string name, const std::string desc, const char short_name,
-                   const bool required = false,
-                   std::function<bool(const Option&)> valid_func =
-                   [] (const Option&) -> bool { return true; }) :
-        Option(name, desc, short_name, required, valid_func)
-    {}
+    OptionParser parser{argc, argv};
 
-    virtual ~ArgumentOption()
-    {}
+    parser.add_multi_argument_option("string", "Sample string(s)", 's');
+    parser.add_multi_argument_option("number", "Sample number(s) between 1 and 10", 'n', true,
+                                     [] (const Option& opt) -> bool
+                                     {
+                                         auto res = true;
+                                         for (auto i = 0u; i < opt.values().size(); ++i) {
+                                             auto num = opt.to<int>(i);
+                                             res = res && num >= 1 && num <= 10;
+                                         }
+                                         return res;
+                                     });
 
-    virtual struct option to_long_opt() const override
-    {
-        return { name_.c_str(), required_argument, nullptr, short_name_ };
+    try {
+        parser.parse();
+        if (*parser["string"])
+            std::cout << "String(s) are " << *parser["string"] << std::endl;
+        if (*parser["number"])
+            std::cout << "Number(s) are " << *parser["number"] << std::endl;
+    } catch (const std::exception& ex) {
+        std::cerr << "Failed to parse arguments: " << ex.what() << std::endl;
+        std::cerr << "Printing usage:" << std::endl;
+        std::cout << parser.get_usage();
     }
 
-    virtual std::string to_short_opt() const override
-    {
-        std::string s{short_name_};
-        s += ":";
-        return s;
-    }
-
-    virtual void consume(const std::string& arg) override
-    {
-        values_.at(0) = arg;
-        consumed_ = true;
-    }
-};
-
+    return 0;
 }
-
-#endif /* _ARGUMENT_OPTION_H_ */

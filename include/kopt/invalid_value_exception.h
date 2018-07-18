@@ -29,6 +29,8 @@
 #include <sstream>
 #include <string>
 
+#include <kopt/option.h>
+
 namespace Kopt {
 
 class InvalidValueException final : public std::exception
@@ -38,9 +40,9 @@ public:
         std::exception()
     {
         std::stringstream ss;
-        ss << "Invalid value ";
-        if (!opt.value().empty())
-            ss << "'" << opt.value() << "' ";
+        ss << "Invalid value(s) ";
+        if (opt.consumed())
+            ss << opt.to_string() << " ";
         ss << "for option " << opt.name();
         what_ = ss.str();
     }

@@ -51,6 +51,10 @@ public:
                              const char short_name, const bool required = false,
                              std::function<bool(const Option&)> valid_func =
                              [] (const Option&) -> bool { return true; });
+    void add_multi_argument_option(const std::string& name, const std::string& desc,
+                                   const char short_name, const bool required = false,
+                                   std::function<bool(const Option&)> valid_func =
+                                   [] (const Option&) -> bool { return true; });
     void parse();
 
     std::string get_usage(const std::string& program = "") const;

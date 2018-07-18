@@ -27,6 +27,9 @@
 #include <getopt.h>
 
 #include <kopt/option_parser.h>
+#include <kopt/flag_option.h>
+#include <kopt/argument_option.h>
+#include <kopt/multi_argument_option.h>
 #include <kopt/unknown_option_exception.h>
 #include <kopt/invalid_value_exception.h>
 #include <kopt/missing_argument_exception.h>
@@ -48,6 +51,16 @@ void OptionParser::add_argument_option(
     const bool required, std::function<bool(const Option&)> valid_func)
 {
     auto ptr = std::make_shared<ArgumentOption>(
+        name, desc, short_name, required, valid_func);
+    options_[name] = ptr;
+    s_options_[short_name] = ptr;
+}
+
+void OptionParser::add_multi_argument_option(
+    const std::string& name, const std::string& desc, const char short_name,
+    const bool required, std::function<bool(const Option&)> valid_func)
+{
+    auto ptr = std::make_shared<MultiArgumentOption>(
         name, desc, short_name, required, valid_func);
     options_[name] = ptr;
     s_options_[short_name] = ptr;
@@ -109,16 +122,18 @@ void OptionParser::parse()
             throw MissingArgumentException();
         if (c == '?' || it == s_options_.end())
             throw UnknownOptionException();
+        // save
         it->second->consume(optarg == nullptr ? "" : optarg);
-        // not in valid range
-        if (!it->second->valid())
-            throw InvalidValueException(*it->second);
     }
 
-    // check for required options
-    for (auto&& opt: options_)
+    for (auto&& opt: options_) {
+        // check for required options
         if (opt.second->required() && !opt.second->consumed())
             throw MissingRequiredOptionException(opt.second->name());
+        // not in valid range
+        if (opt.second->consumed() && !opt.second->valid())
+            throw InvalidValueException(*opt.second);
+    }
 
     // add unparsed options
     const auto argc = argc_ - optind;

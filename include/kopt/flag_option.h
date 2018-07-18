@@ -41,7 +41,7 @@ public:
                const char short_name, const bool required = false) :
         Option(name, desc, short_name, required)
     {
-        value_ = "0";
+        values_.at(0) = "0";
     }
 
     virtual ~FlagOption()
@@ -60,7 +60,7 @@ public:
 
     virtual void consume(const std::string& arg) override
     {
-        value_ = "1";
+        values_.at(0) = "1";
         consumed_ = true;
     }
 };

@@ -27,9 +27,11 @@
 
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <stdexcept>
 #include <type_traits>
 #include <functional>
+#include <vector>
 #include <memory>
 
 #include <unistd.h>
@@ -42,13 +44,18 @@ namespace Kopt {
 class Option
 {
 public:
+    friend std::ostream& operator<< (std::ostream& os, const Option& opt);
+
     Option(const std::string& name, const std::string& desc,
            const char short_name, const bool required = false,
            std::function<bool(const Option&)> valid_func =
            [] (const Option&) -> bool { return true; }) :
         name_{name}, desc_{desc}, short_name_{short_name},
         required_{required}, valid_func_{valid_func}, consumed_{false}
-    {}
+    {
+        // start with empty value
+        values_.resize(1);
+    }
 
     virtual ~Option()
     {}
@@ -59,6 +66,11 @@ public:
 
     virtual void consume(const std::string& arg) = 0;
 
+    virtual bool multi_allowed() const noexcept
+    {
+        return false;
+    }
+
     bool valid() const
     {
         return valid_func_(*this);
@@ -66,12 +78,22 @@ public:
 
     const std::string& value() const noexcept
     {
-        return value_;
+        return values_.at(0);
     }
 
     std::string& value() noexcept
     {
-        return value_;
+        return values_.at(0);
+    }
+
+    const std::vector<std::string>& values() const noexcept
+    {
+        return values_;
+    }
+
+    std::vector<std::string>& values() noexcept
+    {
+        return values_;
     }
 
     const std::string& name() const noexcept
@@ -96,7 +118,7 @@ public:
 
     const std::string& to() const noexcept
     {
-        return value_;
+        return values_.at(0);
     }
 
     const char& short_name() const noexcept
@@ -132,14 +154,20 @@ public:
     template<typename T>
     T to() const
     {
+        return to<T>(0);
+    }
+
+    template<typename T>
+    T to(const std::size_t idx) const
+    {
         T res;
-        std::stringstream ss{value_};
+        std::stringstream ss{values_.at(idx)};
 
         static_assert(std::is_integral_v<T>,
                       "Option can only be converted to integral type!");
 
         if (!(ss >> res))
-            throw ConversionException(value_);
+            throw ConversionException(values_.at(0));
 
         return res;
     }
@@ -149,8 +177,23 @@ public:
         return consumed_;
     }
 
+    std::string to_string() const
+    {
+        std::stringstream ss;
+
+        ss << "[";
+        for (auto i = 0u; i < values().size(); ++i) {
+            ss << values()[i];
+            if (i != (values().size() - 1))
+                ss << ",";
+        }
+        ss << "]";
+
+        return ss.str();
+    }
+
 protected:
-    std::string value_;
+    std::vector<std::string> values_;
     std::string name_;
     std::string desc_;
     char short_name_;
@@ -158,6 +201,12 @@ protected:
     std::function<bool(const Option&)> valid_func_;
     bool consumed_;
 };
+
+std::ostream& operator<< (std::ostream& os, const Option& opt)
+{
+    os << opt.to_string();
+    return os;
+}
 
 }
 

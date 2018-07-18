@@ -22,31 +22,29 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef _ARGUMENT_OPTION_H_
-#define _ARGUMENT_OPTION_H_
+#ifndef _MULTI_ARGUMENT_OPTION_H_
+#define _MULTI_ARGUMENT_OPTION_H_
 
 #include <string>
-#include <stdexcept>
-#include <functional>
-
-#include <unistd.h>
-#include <getopt.h>
+#include <vector>
+#include <memory>
 
 #include <kopt/option.h>
 
 namespace Kopt {
 
-class ArgumentOption final: public Option
+class MultiArgumentOption final : public Option
 {
 public:
-    ArgumentOption(const std::string name, const std::string desc, const char short_name,
-                   const bool required = false,
-                   std::function<bool(const Option&)> valid_func =
-                   [] (const Option&) -> bool { return true; }) :
-        Option(name, desc, short_name, required, valid_func)
+    MultiArgumentOption(const std::string name, const std::string desc, const char short_name,
+                        const bool required = false,
+                        std::function<bool(const Option&)> valid_func =
+                        [] (const Option&) -> bool { return true; }) :
+        Option(name, desc, short_name, required, valid_func),
+        idx_{0}
     {}
 
-    virtual ~ArgumentOption()
+    virtual ~MultiArgumentOption()
     {}
 
     virtual struct option to_long_opt() const override
@@ -63,11 +61,22 @@ public:
 
     virtual void consume(const std::string& arg) override
     {
-        values_.at(0) = arg;
+        if (idx_++)
+            values_.emplace_back(arg);
+        else
+            values_.at(0) = arg;
         consumed_ = true;
     }
+
+    virtual bool multi_allowed() const noexcept override
+    {
+        return true;
+    }
+
+private:
+    std::vector<std::string>::size_type idx_;
 };
 
 }
 
-#endif /* _ARGUMENT_OPTION_H_ */
+#endif /* _MULTI_ARGUMENT_OPTION_H_ */

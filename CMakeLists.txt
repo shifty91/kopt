@@ -9,6 +9,7 @@ add_library(kopt SHARED
 
 set(HEADER_FILES
   include/kopt/argument_option.h
+  include/kopt/multi_argument_option.h
   include/kopt/conversion_exception.h
   include/kopt/flag_option.h
   include/kopt/invalid_value_exception.h
@@ -56,3 +57,7 @@ target_link_libraries(flags kopt)
 add_executable(arguments examples/arguments)
 target_include_directories(arguments PRIVATE include)
 target_link_libraries(arguments kopt)
+
+add_executable(multi_arguments examples/multi_arguments)
+target_include_directories(multi_arguments PRIVATE include)
+target_link_libraries(multi_arguments kopt)
