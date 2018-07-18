@@ -36,17 +36,17 @@
 
 namespace Kopt {
 
-class ArguementOption final: public Option
+class ArgumentOption final: public Option
 {
 public:
-    ArguementOption(const std::string name, const std::string desc, const char short_name,
-                    const bool required = false,
-                    std::function<bool(const Option&)> valid_func =
-                    [] (const Option&) -> bool { return true; }) :
+    ArgumentOption(const std::string name, const std::string desc, const char short_name,
+                   const bool required = false,
+                   std::function<bool(const Option&)> valid_func =
+                   [] (const Option&) -> bool { return true; }) :
         Option(name, desc, short_name, required, valid_func)
     {}
 
-    virtual ~ArguementOption()
+    virtual ~ArgumentOption()
     {}
 
     virtual struct option to_long_opt() const override

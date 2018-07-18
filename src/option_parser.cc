@@ -47,7 +47,7 @@ void OptionParser::add_argument_option(
     const std::string& name, const std::string& desc, const char short_name,
     const bool required, std::function<bool(const Option&)> valid_func)
 {
-    auto ptr = std::make_shared<ArguementOption>(
+    auto ptr = std::make_shared<ArgumentOption>(
         name, desc, short_name, required, valid_func);
     options_[name] = ptr;
     s_options_[short_name] = ptr;
