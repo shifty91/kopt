@@ -19,6 +19,7 @@ set(HEADER_FILES
   include/kopt/option.h
   include/kopt/option_parser.h
   include/kopt/unknown_option_exception.h
+  include/kopt/no_multi_argument_exception.h
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pedantic -Wall -march=native")

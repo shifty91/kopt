@@ -22,60 +22,37 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef _ARGUMENT_OPTION_H_
-#define _ARGUMENT_OPTION_H_
+#ifndef _NO_MULTI_ARGUMENT_EXCEPTION_H_
+#define _NO_MULTI_ARGUMENT_EXCEPTION_H_
 
-#include <string>
 #include <stdexcept>
-#include <functional>
-
-#include <unistd.h>
-#include <getopt.h>
-
-#include <kopt/option.h>
-#include <kopt/no_multi_argument_exception.h>
+#include <string>
 
 namespace Kopt {
 
-class ArgumentOption final: public Option
+class NoMultiArgumentException final : public std::exception
 {
 public:
-    ArgumentOption(const std::string name, const std::string desc, const char short_name,
-                   const bool required = false,
-                   std::function<bool(const Option&)> valid_func =
-                   [] (const Option&) -> bool { return true; }) :
-        Option(name, desc, short_name, required, valid_func),
-        idx_{0}
-    {}
-
-    virtual ~ArgumentOption()
-    {}
-
-    virtual struct option to_long_opt() const override
+    NoMultiArgumentException(const std::string& name) :
+        std::exception()
     {
-        return { name_.c_str(), required_argument, nullptr, short_name_ };
+        what_ = "Multiple values specifed for option '";
+        what_ += name;
+        what_ += "'";
     }
 
-    virtual std::string to_short_opt() const override
-    {
-        std::string s{short_name_};
-        s += ":";
-        return s;
-    }
+    virtual ~NoMultiArgumentException()
+    {}
 
-    virtual void consume(const std::string& arg) override
+    const char *what() const noexcept
     {
-        if (idx_++)
-            throw NoMultiArgumentException(name());
-
-        values_.at(0) = arg;
-        consumed_ = true;
+        return what_.c_str();
     }
 
 private:
-    std::size_t idx_;
+    std::string what_;
 };
 
 }
 
-#endif /* _ARGUMENT_OPTION_H_ */
+#endif /* _NO_MULTI_ARGUMENT_EXCEPTION_H_ */
