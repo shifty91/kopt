@@ -8,6 +8,7 @@ add_library(kopt SHARED
   )
 
 set(HEADER_FILES
+  include/kopt/kopt.h
   include/kopt/argument_option.h
   include/kopt/multi_argument_option.h
   include/kopt/conversion_exception.h

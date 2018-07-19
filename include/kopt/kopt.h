@@ -22,36 +22,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <iostream>
-#include <kopt/kopt.h>
+#ifndef _KOPT_H_
+#define _KOPT_H_
 
-using namespace Kopt;
+#include <kopt/option.h>
+#include <kopt/option_parser.h>
+#include <kopt/flag_option.h>
+#include <kopt/argument_option.h>
+#include <kopt/multi_argument_option.h>
+#include <kopt/conversion_exception.h>
+#include <kopt/invalid_value_exception.h>
+#include <kopt/missing_argument_exception.h>
+#include <kopt/missing_required_option_exception.h>
+#include <kopt/unknown_option_exception.h>
 
-int main(int argc, char *argv[])
-{
-    OptionParser parser{argc, argv};
-
-    parser.add_argument_option("string", "Sample string", 's');
-    parser.add_argument_option("number", "Sample number between 1 and 10", 'n', true,
-                               [] (const Option& opt) -> bool
-                               {
-                                   auto num = opt.to<int>();
-                                   return num >= 1 && num <= 10;
-                               });
-
-    try {
-        parser.parse();
-        if (*parser["string"])
-            std::cout << "String is " << parser["string"]->value() << std::endl;
-        if (*parser["number"]) {
-            auto num = parser["number"]->to<int>();
-            std::cout << "Number is " << num << std::endl;;
-        }
-    } catch (const std::exception& ex) {
-        std::cerr << "Failed to parse arguments: " << ex.what() << std::endl;
-        std::cerr << "Printing usage:" << std::endl;
-        std::cout << parser.get_usage();
-    }
-
-    return 0;
-}
+#endif /* _KOPT_H_ */

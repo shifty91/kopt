@@ -23,7 +23,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
-#include <kopt/option_parser.h>
+#include <kopt/kopt.h>
 
 using namespace Kopt;
 
