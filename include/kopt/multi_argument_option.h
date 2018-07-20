@@ -68,11 +68,6 @@ public:
         consumed_ = true;
     }
 
-    virtual bool multi_allowed() const noexcept override
-    {
-        return true;
-    }
-
 private:
     std::vector<std::string>::size_type idx_;
 };

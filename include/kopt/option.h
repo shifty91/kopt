@@ -66,11 +66,6 @@ public:
 
     virtual void consume(const std::string& arg) = 0;
 
-    virtual bool multi_allowed() const noexcept
-    {
-        return false;
-    }
-
     bool valid() const
     {
         return valid_func_(*this);
