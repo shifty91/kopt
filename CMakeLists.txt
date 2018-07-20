@@ -63,3 +63,7 @@ target_link_libraries(arguments kopt)
 add_executable(multi_arguments examples/multi_arguments)
 target_include_directories(multi_arguments PRIVATE include)
 target_link_libraries(multi_arguments kopt)
+
+add_executable(unparsed examples/unparsed)
+target_include_directories(unparsed PRIVATE include)
+target_link_libraries(unparsed kopt)
