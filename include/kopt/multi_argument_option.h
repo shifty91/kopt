@@ -36,10 +36,9 @@ namespace Kopt {
 class MultiArgumentOption final : public Option
 {
 public:
-    MultiArgumentOption(const std::string name, const std::string desc, const char short_name,
-                        const bool required = false,
-                        std::function<bool(const Option&)> valid_func =
-                        [] (const Option&) -> bool { return true; }) :
+    MultiArgumentOption(const std::string name, const std::string desc,
+                        const char short_name, const bool required = false,
+                        ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
         Option(name, desc, short_name, required, valid_func),
         idx_{0}
     {}

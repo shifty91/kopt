@@ -48,7 +48,7 @@ void OptionParser::add_flag_option(
 
 void OptionParser::add_argument_option(
     const std::string& name, const std::string& desc, const char short_name,
-    const bool required, std::function<bool(const Option&)> valid_func)
+    const bool required, ValidFunc valid_func)
 {
     auto ptr = std::make_shared<ArgumentOption>(
         name, desc, short_name, required, valid_func);
@@ -58,7 +58,7 @@ void OptionParser::add_argument_option(
 
 void OptionParser::add_multi_argument_option(
     const std::string& name, const std::string& desc, const char short_name,
-    const bool required, std::function<bool(const Option&)> valid_func)
+    const bool required, ValidFunc valid_func)
 {
     auto ptr = std::make_shared<MultiArgumentOption>(
         name, desc, short_name, required, valid_func);

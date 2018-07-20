@@ -41,6 +41,10 @@
 
 namespace Kopt {
 
+class Option;
+
+using ValidFunc = std::function<bool(const Option&)>;
+
 class Option
 {
 public:
@@ -48,8 +52,7 @@ public:
 
     Option(const std::string& name, const std::string& desc,
            const char short_name, const bool required = false,
-           std::function<bool(const Option&)> valid_func =
-           [] (const Option&) -> bool { return true; }) :
+           ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
         name_{name}, desc_{desc}, short_name_{short_name},
         required_{required}, valid_func_{valid_func}, consumed_{false}
     {
@@ -193,7 +196,7 @@ protected:
     std::string desc_;
     char short_name_;
     bool required_;
-    std::function<bool(const Option&)> valid_func_;
+    ValidFunc valid_func_;
     bool consumed_;
 };
 
