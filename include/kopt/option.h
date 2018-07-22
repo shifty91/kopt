@@ -200,7 +200,7 @@ protected:
     bool consumed_;
 };
 
-std::ostream& operator<< (std::ostream& os, const Option& opt)
+inline std::ostream& operator<< (std::ostream& os, const Option& opt)
 {
     os << opt.to_string();
     return os;
