@@ -6,6 +6,9 @@ include(GNUInstallDirs)
 add_library(kopt SHARED
   src/option_parser.cc
   )
+add_library(kopt_static STATIC
+  src/option_parser.cc
+  )
 
 set(HEADER_FILES
   include/kopt/kopt.h
@@ -41,11 +44,14 @@ set_target_properties(kopt PROPERTIES
   VERSION ${PROJECT_VERSION}
   SOVERSION 0
   PUBLIC_HEADER "${HEADER_FILES}")
+set_target_properties(kopt_static PROPERTIES OUTPUT_NAME kopt)
 
 configure_file(kopt.pc.in kopt.pc @ONLY)
 
 target_include_directories(kopt PRIVATE include)
 target_include_directories(kopt PRIVATE src)
+target_include_directories(kopt_static PRIVATE include)
+target_include_directories(kopt_static PRIVATE src)
 
 install(TARGETS kopt LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/kopt)
