@@ -161,8 +161,8 @@ public:
         T res;
         std::stringstream ss{values_.at(idx)};
 
-        static_assert(std::is_integral_v<T>,
-                      "Option can only be converted to integral type!");
+        static_assert(std::is_arithmetic_v<T>,
+                      "Option can only be converted to arithmetic type!");
 
         if (!(ss >> res))
             throw ConversionException(values_.at(0));
