@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(kopt VERSION 1.0.0 DESCRIPTION "Argument Parsing Library")
+project(kopt VERSION 0.0.1 DESCRIPTION "Argument Parsing Library")
 
 include(GNUInstallDirs)
 
@@ -26,7 +26,6 @@ set(HEADER_FILES
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pedantic -Wall -march=native")
-set(VERSION "1.0")
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++17" HAVE_CPP17)
