@@ -23,6 +23,8 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 #include <getopt.h>
 
@@ -80,6 +82,8 @@ std::vector<option> OptionParser::construct_longopts() const
 
 std::string OptionParser::get_usage(const std::string& program) const
 {
+    using namespace std::string_literals;
+
     std::stringstream ss;
 
     ss << "usage: ";
@@ -89,10 +93,24 @@ std::string OptionParser::get_usage(const std::string& program) const
         ss << argv_[0];
     ss << " [options]" << std::endl;
 
-    for (auto&& opt: options_)
-        ss << "  " << "--" << opt.second->name() << ", -"
-           << opt.second->short_name() << ": " << opt.second->desc()
+    auto max = std::max_element(options_.begin(), options_.end(),
+                                [] (const auto& a, const auto& b)
+                                {
+                                    return a.second->name().size() <
+                                        b.second->name().size();
+                                });
+    auto max_len = max->second->name().size();
+
+    for (auto&& opt: options_) {
+        auto opt_str = "  --"s;
+        opt_str += opt.second->name();
+        opt_str += ", -";
+        opt_str += opt.second->short_name();
+        opt_str += ":";
+
+        ss << std::left << std::setw(max_len + 9) << opt_str << " " << opt.second->desc()
            << std::endl;
+    }
 
     return ss.str();
 }
