@@ -58,7 +58,7 @@ public:
         ValidFunc valid_func = [] (const Option&) -> bool { return true; });
     void parse();
 
-    std::string get_usage(const std::string& program = "") const;
+    std::string get_usage(const std::string& additonal_usage = "") const;
 
     std::shared_ptr<Option> operator[](const std::string& opt)
     {

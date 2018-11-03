@@ -27,6 +27,7 @@
 #include <algorithm>
 
 #include <getopt.h>
+#include <libgen.h>
 
 #include <kopt/option_parser.h>
 #include <kopt/flag_option.h>
@@ -80,18 +81,18 @@ std::vector<option> OptionParser::construct_longopts() const
     return res;
 }
 
-std::string OptionParser::get_usage(const std::string& program) const
+std::string OptionParser::get_usage(const std::string& additional_usage) const
 {
     using namespace std::string_literals;
 
     std::stringstream ss;
 
     ss << "usage: ";
-    if (!program.empty())
-        ss << program;
-    else
-        ss << argv_[0];
-    ss << " [options]" << std::endl;
+    ss << basename(argv_[0]);
+    ss << " [options]";
+    if (!additional_usage.empty())
+        ss << " " << additional_usage;
+    ss << std::endl;
 
     auto max = std::max_element(options_.begin(), options_.end(),
                                 [] (const auto& a, const auto& b)
