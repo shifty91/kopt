@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(kopt VERSION 0.0.1 DESCRIPTION "Argument Parsing Library")
+project(kopt VERSION 0.1.0 DESCRIPTION "Argument Parsing Library")
 
 include(GNUInstallDirs)
 
