@@ -142,7 +142,7 @@ void OptionParser::parse()
         if (c == '?' || it == s_options_.end())
             throw UnknownOptionException();
         // save
-        it->second->consume(optarg == nullptr ? "" : optarg);
+        it->second->consume(optarg == nullptr ? "1" : optarg);
     }
 
     for (auto&& opt: options_) {

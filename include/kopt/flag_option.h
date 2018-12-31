@@ -60,7 +60,7 @@ public:
 
     virtual void consume(const std::string& arg) override
     {
-        values_.at(0) = "1";
+        values_.at(0) = arg;
         consumed_ = true;
     }
 };

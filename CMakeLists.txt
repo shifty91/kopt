@@ -25,7 +25,7 @@ set(HEADER_FILES
   include/kopt/no_multi_argument_exception.h
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pedantic -Wall -march=native")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pedantic -Wall -Wextra -march=native")
 
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-std=c++17" HAVE_CPP17)
