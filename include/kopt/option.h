@@ -150,13 +150,7 @@ public:
     }
 
     template<typename T>
-    T to() const
-    {
-        return to<T>(0);
-    }
-
-    template<typename T>
-    T to(const std::size_t idx) const
+    T to(const std::size_t idx = 0) const
     {
         T res;
         std::stringstream ss{values_.at(idx)};
