@@ -30,44 +30,12 @@
 #include <libgen.h>
 
 #include <kopt/option_parser.h>
-#include <kopt/flag_option.h>
-#include <kopt/argument_option.h>
-#include <kopt/multi_argument_option.h>
 #include <kopt/unknown_option_exception.h>
 #include <kopt/invalid_value_exception.h>
 #include <kopt/missing_argument_exception.h>
 #include <kopt/missing_required_option_exception.h>
 
 namespace Kopt {
-
-void OptionParser::add_flag_option(
-    const std::string& name, const std::string& desc, const char short_name,
-    const bool required)
-{
-    auto ptr = std::make_shared<FlagOption>(name, desc, short_name, required);
-    options_[name] = ptr;
-    s_options_[short_name] = ptr;
-}
-
-void OptionParser::add_argument_option(
-    const std::string& name, const std::string& desc, const char short_name,
-    const bool required, ValidFunc valid_func)
-{
-    auto ptr = std::make_shared<ArgumentOption>(
-        name, desc, short_name, required, valid_func);
-    options_[name] = ptr;
-    s_options_[short_name] = ptr;
-}
-
-void OptionParser::add_multi_argument_option(
-    const std::string& name, const std::string& desc, const char short_name,
-    const bool required, ValidFunc valid_func)
-{
-    auto ptr = std::make_shared<MultiArgumentOption>(
-        name, desc, short_name, required, valid_func);
-    options_[name] = ptr;
-    s_options_[short_name] = ptr;
-}
 
 std::vector<option> OptionParser::construct_longopts() const
 {

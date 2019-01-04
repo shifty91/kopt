@@ -38,8 +38,9 @@ class FlagOption final: public Option
 {
 public:
     FlagOption(const std::string& name, const std::string& desc,
-               const char short_name, const bool required = false) :
-        Option(name, desc, short_name, required)
+               const char short_name, const bool required = false,
+        ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
+        Option(name, desc, short_name, required, valid_func)
     {
         values_.at(0) = "0";
     }

@@ -34,6 +34,7 @@
 #include <kopt/option.h>
 #include <kopt/flag_option.h>
 #include <kopt/argument_option.h>
+#include <kopt/multi_argument_option.h>
 #include <kopt/unknown_option_exception.h>
 
 namespace Kopt {
@@ -47,15 +48,27 @@ public:
 
     void add_flag_option(
         const std::string& name, const std::string& desc,
-        const char short_name, const bool required = false);
+        const char short_name, const bool required = false)
+    {
+        add_option<FlagOption>(name, desc, short_name, required);
+    }
+
     void add_argument_option(
         const std::string& name, const std::string& desc,
         const char short_name, const bool required = false,
-        ValidFunc valid_func = [] (const Option&) -> bool { return true; });
+        ValidFunc valid_func = [] (const Option&) -> bool { return true; })
+    {
+        add_option<ArgumentOption>(name, desc, short_name, required, valid_func);
+    }
+
     void add_multi_argument_option(
         const std::string& name, const std::string& desc,
         const char short_name, const bool required = false,
-        ValidFunc valid_func = [] (const Option&) -> bool { return true; });
+        ValidFunc valid_func = [] (const Option&) -> bool { return true; })
+    {
+        add_option<MultiArgumentOption>(name, desc, short_name, required, valid_func);
+    }
+
     void parse();
 
     std::string get_usage(const std::string& additonal_usage = "") const;
@@ -76,6 +89,19 @@ public:
 private:
     std::vector<option> construct_longopts() const;
     std::string construct_shortopts() const;
+
+    template<typename OPTION>
+    void add_option(
+        const std::string& name, const std::string& desc,
+        const char short_name, const bool required = false,
+        ValidFunc valid_func = [] (const Option&) -> bool { return true; })
+    {
+
+        auto ptr = std::make_shared<OPTION>(
+            name, desc, short_name, required, valid_func);
+        options_[name] = ptr;
+        s_options_[short_name] = ptr;
+    }
 
     int argc_;
     char **argv_;
