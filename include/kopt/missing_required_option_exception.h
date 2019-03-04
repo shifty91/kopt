@@ -49,7 +49,7 @@ public:
         return what_.c_str();
     }
 
-public:
+private:
     std::string what_;
 };
 
