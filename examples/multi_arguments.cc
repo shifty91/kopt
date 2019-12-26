@@ -35,12 +35,8 @@ int main(int argc, char *argv[])
     parser.add_multi_argument_option("number", "Sample number(s) between 1 and 10", 'n', true,
                                      [] (const Option& opt) -> bool
                                      {
-                                         auto res = true;
-                                         for (auto&& sub_opt: opt) {
-                                             auto num = sub_opt->to<int>();
-                                             res = res && num >= 1 && num <= 10;
-                                         }
-                                         return res;
+                                         auto num = opt.to<int>();
+                                         return num >= 1 && num <= 10;
                                      });
 
     try {

@@ -68,7 +68,14 @@ public:
 
     bool valid() const
     {
-        return valid_func_(*this);
+        if (sub_options_.empty()) {
+            return valid_func_(*this);
+        } else {
+            for (auto&& sub_opt: sub_options_)
+                if (!valid_func_(*sub_opt))
+                    return false;
+        }
+        return true;
     }
 
     const std::string& value() const noexcept
