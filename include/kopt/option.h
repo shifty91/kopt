@@ -55,10 +55,7 @@ public:
            ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
         name_{name}, desc_{desc}, short_name_{short_name},
         required_{required}, valid_func_{valid_func}, consumed_{false}
-    {
-        // start with empty value
-        values_.resize(1);
-    }
+    {}
 
     virtual ~Option()
     {}
@@ -76,22 +73,12 @@ public:
 
     const std::string& value() const noexcept
     {
-        return values_.at(0);
+        return value_;
     }
 
     std::string& value() noexcept
     {
-        return values_.at(0);
-    }
-
-    const std::vector<std::string>& values() const noexcept
-    {
-        return values_;
-    }
-
-    std::vector<std::string>& values() noexcept
-    {
-        return values_;
+        return value_;
     }
 
     const std::string& name() const noexcept
@@ -116,7 +103,7 @@ public:
 
     const std::string& to() const noexcept
     {
-        return values_.at(0);
+        return value_;
     }
 
     const char& short_name() const noexcept
@@ -149,17 +136,47 @@ public:
         return consumed_;
     }
 
+    auto begin()
+    {
+        return sub_options_.begin();
+    }
+
+    auto begin() const
+    {
+        return sub_options_.begin();
+    }
+
+    auto cbegin() const
+    {
+        return sub_options_.cbegin();
+    }
+
+    auto end()
+    {
+        return sub_options_.end();
+    }
+
+    auto end() const
+    {
+        return sub_options_.end();
+    }
+
+    auto cend() const
+    {
+        return sub_options_.cend();
+    }
+
     template<typename T>
-    T to(const std::size_t idx = 0) const
+    T to() const
     {
         T res;
-        std::stringstream ss{values_.at(idx)};
+        std::stringstream ss{value_};
 
         static_assert(std::is_arithmetic_v<T>,
                       "Option can only be converted to arithmetic type!");
 
         if (!(ss >> res))
-            throw ConversionException(values_.at(0));
+            throw ConversionException(value_);
 
         return res;
     }
@@ -174,10 +191,14 @@ public:
         std::stringstream ss;
 
         ss << "[";
-        for (auto i = 0u; i < values().size(); ++i) {
-            ss << values()[i];
-            if (i != (values().size() - 1))
-                ss << ",";
+        if (sub_options_.empty()) {
+            ss << value_;
+        } else {
+            for (auto i = 0u; i < sub_options_.size(); ++i) {
+                ss << sub_options_.at(i)->value();
+                if (i != sub_options_.size() - 1)
+                    ss << ",";
+            }
         }
         ss << "]";
 
@@ -185,13 +206,14 @@ public:
     }
 
 protected:
-    std::vector<std::string> values_;
+    std::string value_;
     std::string name_;
     std::string desc_;
     char short_name_;
     bool required_;
     ValidFunc valid_func_;
     bool consumed_;
+    std::vector<std::shared_ptr<Option>> sub_options_;
 };
 
 inline std::ostream& operator<< (std::ostream& os, const Option& opt)

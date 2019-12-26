@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
                                      [] (const Option& opt) -> bool
                                      {
                                          auto res = true;
-                                         for (auto i = 0u; i < opt.values().size(); ++i) {
-                                             auto num = opt.to<int>(i);
+                                         for (auto&& sub_opt: opt) {
+                                             auto num = sub_opt->to<int>();
                                              res = res && num >= 1 && num <= 10;
                                          }
                                          return res;

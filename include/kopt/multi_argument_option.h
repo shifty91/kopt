@@ -30,6 +30,7 @@
 #include <memory>
 
 #include <kopt/option.h>
+#include <kopt/argument_option.h>
 
 namespace Kopt {
 
@@ -39,8 +40,7 @@ public:
     MultiArgumentOption(const std::string name, const std::string desc,
                         const char short_name, const bool required = false,
                         ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
-        Option(name, desc, short_name, required, valid_func),
-        idx_{0}
+        Option(name, desc, short_name, required, valid_func)
     {}
 
     virtual ~MultiArgumentOption()
@@ -60,15 +60,12 @@ public:
 
     virtual void consume(const std::string& arg) override
     {
-        if (idx_++)
-            values_.emplace_back(arg);
-        else
-            values_.at(0) = arg;
+        auto opt = std::make_shared<ArgumentOption>(name_, desc_, short_name_,
+                                                    required_, valid_func_);
+        opt->consume(arg);
+        sub_options_.emplace_back(opt);
         consumed_ = true;
     }
-
-private:
-    std::vector<std::string>::size_type idx_;
 };
 
 }

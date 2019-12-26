@@ -67,7 +67,7 @@ public:
         if (idx_++)
             throw NoMultiArgumentException(name());
 
-        values_.at(0) = arg;
+        value_    = arg;
         consumed_ = true;
     }
 

@@ -42,7 +42,7 @@ public:
         ValidFunc valid_func = [] (const Option&) -> bool { return true; }) :
         Option(name, desc, short_name, required, valid_func)
     {
-        values_.at(0) = "0";
+        value_ = "0";
     }
 
     virtual ~FlagOption()
@@ -61,7 +61,7 @@ public:
 
     virtual void consume(const std::string& arg) override
     {
-        values_.at(0) = arg;
+        value_    = arg;
         consumed_ = true;
     }
 };
