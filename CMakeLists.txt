@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(kopt VERSION 0.1.0 DESCRIPTION "Argument Parsing Library")
+project(kopt VERSION 2.0.0 DESCRIPTION "Argument Parsing Library")
 
 include(GNUInstallDirs)
 
@@ -41,7 +41,7 @@ endif()
 
 set_target_properties(kopt PROPERTIES
   VERSION ${PROJECT_VERSION}
-  SOVERSION 0
+  SOVERSION 2
   PUBLIC_HEADER "${HEADER_FILES}")
 set_target_properties(kopt_static PROPERTIES OUTPUT_NAME kopt)
 
