@@ -27,4 +27,4 @@ BSD 2-clause
 
 ## Author
 
-(C) 2018 Kurt Kanzenbach <kurt@kmk-computers.de>
+(C) 2018,2019 Kurt Kanzenbach <kurt@kmk-computers.de>
